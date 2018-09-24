@@ -1,16 +1,8 @@
-def isOnAzure() {
-  def metadataUrl = 'http://169.254.169.254/metadata/instance?api-version=2017-08-01'
-  def response = httpRequest(
-                      url: metadataUrl,
-                      customHeaders: [[name: 'Metadata', value: 'true']],
-                      validResponseCodes: "100:499"
-                  )
-  return response.status == 200
-}
+import io.equalexperts.Utils
 
 def call(Map config) {
-
-  if (isOnAzure()) {
+  def utils = new Utils()
+  if (utils.isOnAzure()) {
     config.registryAddress = config.registryAddresses['acr']
     acrBuildPush(config)
     config.gitVersion = env.GIT_VERSION
